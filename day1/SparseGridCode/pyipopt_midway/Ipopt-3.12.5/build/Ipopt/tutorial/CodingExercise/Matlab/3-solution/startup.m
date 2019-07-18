@@ -1,1 +1,1 @@
-addpath /home/simon/projects/OSM2018/day1_SparseGrid/SparseGridCode/pyipopt_midway/Ipopt-3.12.5/build/lib
+addpath /home/rccguest6110/OSE2019_JS/day1/SparseGridCode/pyipopt_midway/Ipopt-3.12.5/build/lib
