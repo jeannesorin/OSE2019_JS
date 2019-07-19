@@ -36,10 +36,14 @@ def sparse_grid_iter(n_agents, iDepth, valold):
 
     aPoints=grid.getPoints()
     iNumP1=aPoints.shape[0]
-    aVals=np.empty([iNumP1, 1])
+    aVals=np.empty([iNumP1, 1])    
     
+    print("Number of points in grid is", iNumP1)
+  
     file=open("comparison1.txt", 'w')
     for iI in range(iNumP1):
+        print("Solving for point", iI)
+
         aVals[iI]=solveriter.iterate(aPoints[iI], n_agents, valold)[0]
         v=aVals[iI]*np.ones((1,1))
         to_print=np.hstack((aPoints[iI].reshape(1,n_agents), v))

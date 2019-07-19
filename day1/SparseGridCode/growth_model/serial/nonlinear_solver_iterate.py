@@ -69,7 +69,8 @@ def iterate(k_init, n_agents, grid):
     X[:n_agents]=cons_init
     X[n_agents:2*n_agents]=lab_init
     X[2*n_agents:3*n_agents]=inv_init
-    
+    print("Points coordinates are", x)
+
     # Create ev_f, eval_f, eval_grad_f, eval_g, eval_jac_g for given k_init and n_agent 
         
     def eval_f(X):
@@ -114,5 +115,6 @@ def iterate(k_init, n_agents, grid):
     #    f.write(str(num)+"\t")
     #f.write("\n")
     #f.close()
-    
+    print("The value of the objective function is", obj)
+
     return obj, c, l, inv

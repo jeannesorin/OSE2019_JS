@@ -111,7 +111,7 @@ def initial(k_init, n_agents):
     c=x[:n_agents]
     l=x[n_agents:2*n_agents]
     inv=x[2*n_agents:3*n_agents]
-    
+    print("Points coordinates are", x)
     to_print=np.hstack((obj,x))
     
     # == debug ==
@@ -121,6 +121,6 @@ def initial(k_init, n_agents):
     #    f.write(str(num)+"\t")
     #f.write("\n")
     #f.close()
-    
+    print("The value of the objective function is", obj)
     return obj, c, l, inv
     

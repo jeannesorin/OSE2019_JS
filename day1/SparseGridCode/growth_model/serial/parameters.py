@@ -29,7 +29,7 @@ No_samples = 1000
 
 # Model Paramters
 
-n_agents=2  # number of continuous dimensions of the model
+n_agents=3  # number of continuous dimensions of the model
 
 beta=0.8
 rho=0.95

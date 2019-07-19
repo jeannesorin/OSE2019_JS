@@ -1,0 +1,6 @@
+module load python
+export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
+export IPOPT_DIR="/home/rccguest6110/OSE2019/day1/SparseGridCode/pyipopt_midway/Ipopt-3.12.5/build"
+export LD_LIBRARY_PATH=$IPOPT_DIR/lib:$LD_LIBRARY_PATH
+
+
