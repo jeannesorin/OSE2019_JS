@@ -8,7 +8,7 @@
 #======================================================================
 
 from parameters import *
-from ipopt_wrapper import EV_F, EV_GRAD_F, EV_G, EV_JAC_G
+from ipopt_wrapper_epsi import EV_F, EV_GRAD_F, EV_G, EV_JAC_G
 import numpy as np
 import pyipopt
 
@@ -89,11 +89,9 @@ def initial(k_init, n_agents, phi_i):
         
     def eval_jac_g(X, flag):
         return EV_JAC_G(X, flag, k_init, n_agents, phi_i)
-        
-        
-    # Loop over the different states
-    # Before: initialize the objective function : as many len as phi
-    # Initialize the objective function
+    # Initialize vector of output depending on theta
+
+    
     # First create a handle for the Ipopt problem 
     nlp=pyipopt.create(nvars, X_L, X_U, M, G_L, G_U, NELE_JAC, NELE_HESS, eval_f, eval_grad_f, eval_g, eval_jac_g)
     nlp.num_option("obj_scaling_factor", -1.00)
@@ -125,6 +123,5 @@ def initial(k_init, n_agents, phi_i):
     #    f.write(str(num)+"\t")
     #f.write("\n")
     #f.close()
-    #print(obj)
-    return obj, c, l, inv
     
+    return obj, c, l, inv

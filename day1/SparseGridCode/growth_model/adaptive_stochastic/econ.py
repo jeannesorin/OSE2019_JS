@@ -18,7 +18,7 @@ def utility(cons=[], lab=[], phi_i=[]):
     sum_util=0.0
     n=len(cons)
     for i in range(n):
-        nom1=(cons[i]/big_A)**(1.0-gamma) -1.0
+        nom1=(cons[i]/(big_A))**(1.0-gamma) -1.0
         den1=1.0-gamma
         
         nom2=(1.0-psi)*((lab[i]**(1.0+eta)) -1.0)
@@ -34,9 +34,8 @@ def utility(cons=[], lab=[], phi_i=[]):
 #====================================================================== 
 # output_f 
 
-def output_f(kap=[], lab=[], phi_i=[]):
-    # Modified for exercise 2: stochastic
-    fun_val =  phi_i*big_A*(kap**psi)*(lab**(1.0 - psi))
+def output_f(kap=[], lab=[], phi_i = []):
+    fun_val = phi_i*big_A*(kap**psi)*(lab**(1.0 - psi))
     return fun_val
 
 #======================================================================

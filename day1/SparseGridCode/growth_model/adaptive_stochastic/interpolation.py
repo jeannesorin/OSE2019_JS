@@ -16,8 +16,6 @@ import nonlinear_solver_initial as solver
 
 #======================================================================
 
-
-
 def sparse_grid(n_agents, iDepth, iG):
     
     grid  = TasmanianSG.TasmanianSparseGrid()
@@ -33,54 +31,38 @@ def sparse_grid(n_agents, iDepth, iG):
     iDim=n_agents
 
     grid.makeLocalPolynomialGrid(iDim, iOut, iDepth, which_basis, "localp")
-    grid.setDomainTransform(ranges)
+    grid.setDomainTransform(ranges) # Change domain to K low and upper bar
 
- 
-    # 1 : Make grid
     aPoints=grid.getPoints()
-    # Nb points on your grid
     iNumP1=aPoints.shape[0]
     aVals=np.empty([iNumP1, iOut])
     
-    grid.plotPoints2D()
-    
+    file=open("comparison0.txt", 'w')
     for iI in range(iNumP1):
-        # 2 : Evaluate the function at each point
-        phi_i = phi[iG]
-        aVals[iI] = solver.initial(aPoints[iI], n_agents, phi_i)[0]
-            #aVals[iI,:]=solver.initial(aPoints[iI,:], n_agents)[0] 
+        aVals[iI]=solver.initial(aPoints[iI], n_agents, phi[iG])[0]# Solve the value function problem for all grid points
 
+    grid.loadNeededPoints(aVals) # evaluate interpolant at grid points
     
-    # 3 : estimate the interpolant \alpha_{j,i} (the parameters)
-    grid.loadNeededPoints(aVals)
-    
-    
-    #refinement level --> adaptative part
-
+    #refinement level
     for iK in range(refinement_level):
-        #also use fds, or other rules
-        # 1.B.1 Where to add grid points
-        grid.setSurplusRefinement(fTol, 1, "fds")  
-        
-        # 1.B.2 Create the new ADAPTIVE grid
+        grid.setSurplusRefinement(fTol, 1, "fds")   #also use fds, or other rules
         aPoints = grid.getNeededPoints()
-        #grid.plotPoints2D()
-
-        # Nb of points on this new grid
-        iNumP1=aPoints.shape[0]
-        #print(iNumP1)
-        aVals = np.empty([iNumP1, iOut])
+        aVals=np.empty([aPoints.shape[0], iOut])
         
-        for iI in range(iNumP1):
-            phi_i = phi[iG]
-            aVals[iI] = solver.initial(aPoints[iI], n_agents, phi_i)[0]
-                #aVals[iI,:]=solver.initial(aPoints[iI,:], n_agents)[0] 
-        print("Refinement level", iK)
+        for iI in range(aPoints.shape[0]):
+            aVals[iI]=solver.initial(aPoints[iI], n_agents, phi[iG])[0]# Solve the value function problem for all grid points
         
-        # 3.B : estimate the interpolant for these new points
+        # Update interpolant
         grid.loadNeededPoints(aVals)
+
+    #print(" {0:9d} {1:9d}  {2:1.2e}".format(iK+1, grid.getNumPoints()))
+    #grid2 = TasmanianSG.TasmanianSparseGrid()
+    #grid2.makeLocalPolynomialGrid(iDim, iOut, refinement_level+iDepth, which_basis, "localp")
+    #a = grid2.getNumPoints()
     
+    #f=open("grid.txt", 'w')
+    #np.savetxt(f, aPoints, fmt='% 2.16f')
+    #f.close()
     
     return grid
 #======================================================================
-

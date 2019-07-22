@@ -28,46 +28,34 @@ def EV_F(X, k_init, n_agents, phi_i):
     return VT_sum
 
 # V infinity
-def V_INFINITY(k=[], phi_i=[]):
+def V_INFINITY(k=[],phi_i=[]):
     e=np.ones(len(k))
-    c=output_f(k,e, phi_i)
-    v_infinity=utility(c,e, phi_i)/(1-beta)
+    c=output_f(k,e,phi_i)
+    v_infinity=utility(c,e,phi_i)/(1-beta)
     return v_infinity
 
 #=======================================================================
 #   Objective Function during VFI (note - we need to interpolate on an "old" sprase grid)
     
-def EV_F_ITER(X, k_init, n_agents, lvalold, phi_i):
-    
+def EV_F_ITER(X, k_init, n_agents, grid, phi_i):
     # Extract Variables
     cons=X[0:n_agents]
     lab=X[n_agents:2*n_agents]
     inv=X[2*n_agents:3*n_agents]
+
     
     knext= (1-delta)*k_init + inv
-    
+    grid0 = grid[0]
+    grid1 = grid[1]
+    grid2 = grid[2]
+    grid3 = grid[3]
+    grid4 = grid[4]
     # Compute Value Function
-    
-    print("lvalold0", lvalold[0])
-    #print("lvalold0.evaluate(knext)", lvalold[0].evaluate(knext))
-    print("knext", knext)
-    print("cons", cons)
-    print("lab", lab)
-    print("phi_i", phi_i)
-    
-    lvalold0 = lvalold[0]
-    lvalold1 = lvalold[1]
-    lvalold2 = lvalold[2]
-    lvalold3 = lvalold[3]
-    lvalold4 = lvalold[4]
 
-    VT_sum=utility(cons, lab, phi_i) + beta*(
-        pi*lvalold0.evaluate(knext) +
-        pi*lvalold1.evaluate(knext) +
-        pi*lvalold2.evaluate(knext) +
-        pi*lvalold3.evaluate(knext) +
-        pi*lvalold4.evaluate(knext))
-       
+    VT_sum=utility(cons, lab, phi_i) + beta*(pi*grid0.evaluate(knext) + pi*grid1.evaluate(knext) + \
+                                      pi*grid2.evaluate(knext) + \
+                                      pi*grid3.evaluate(knext) + \
+                                      pi*grid4.evaluate(knext))
     return VT_sum
     
 #=======================================================================
@@ -105,7 +93,7 @@ def EV_GRAD_F(X, k_init, n_agents, phi_i):
 #=======================================================================
 #   Computation of gradient (first order finite difference) of the objective function 
     
-def EV_GRAD_F_ITER(X, k_init, n_agents, lvalold, phi_i):
+def EV_GRAD_F_ITER(X, k_init, n_agents, grid, phi_i):
     
     N=len(X)
     GRAD=np.zeros(N, float) # Initial Gradient of Objective Function
@@ -117,19 +105,19 @@ def EV_GRAD_F_ITER(X, k_init, n_agents, lvalold, phi_i):
         
         if (xAdj[ixN] - h >= 0):
             xAdj[ixN]=X[ixN] + h            
-            fx2=EV_F_ITER(xAdj, k_init, n_agents, lvalold, phi_i)
+            fx2=EV_F_ITER(xAdj, k_init, n_agents, grid, phi_i)
             
             xAdj[ixN]=X[ixN] - h
-            fx1=EV_F_ITER(xAdj, k_init, n_agents, lvalold, phi_i)
+            fx1=EV_F_ITER(xAdj, k_init, n_agents, grid, phi_i)
             
             GRAD[ixN]=(fx2-fx1)/(2.0*h)
             
         else:
             xAdj[ixN]=X[ixN] + h
-            fx2=EV_F_ITER(xAdj, k_init, n_agents, lvalold, phi_i)
+            fx2=EV_F_ITER(xAdj, k_init, n_agents, grid, phi_i)
             
             xAdj[ixN]=X[ixN]
-            fx1=EV_F_ITER(xAdj, k_init, n_agents, lvalold, phi_i)
+            fx1=EV_F_ITER(xAdj, k_init, n_agents, grid, phi_i)
             GRAD[ixN]=(fx2-fx1)/h
             
     return GRAD
@@ -261,22 +249,3 @@ def EV_JAC_G_ITER(X, flag, k_init, n_agents, phi_i):
         return A    
     
 #======================================================================
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-            
-            
-            
-    
-    
-    
-    
-    
-    

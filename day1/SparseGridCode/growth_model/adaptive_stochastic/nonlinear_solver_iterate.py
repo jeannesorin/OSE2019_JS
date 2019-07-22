@@ -9,11 +9,11 @@
 
 from parameters import *
 import TasmanianSG
-from ipopt_wrapper import EV_F_ITER, EV_GRAD_F_ITER, EV_G_ITER, EV_JAC_G_ITER
+from ipopt_wrapper_epsi import EV_F_ITER, EV_GRAD_F_ITER, EV_G_ITER, EV_JAC_G_ITER
 import numpy as np
 import pyipopt
 
-def iterate(k_init, n_agents, lvalold, phi_i):
+def iterate(k_init, n_agents, Lvalold, phi_i):
     
     # IPOPT PARAMETERS below "
     N=3*n_agents    # number of vars
@@ -73,18 +73,18 @@ def iterate(k_init, n_agents, lvalold, phi_i):
     # Create ev_f, eval_f, eval_grad_f, eval_g, eval_jac_g for given k_init and n_agent 
         
     def eval_f(X):
-        return EV_F_ITER(X, k_init, n_agents, lvalold, phi_i)
+        return EV_F_ITER(X, k_init, n_agents, Lvalold, phi_i)
         
-    def eval_grad_f(x):
-        return EV_GRAD_F_ITER(X, k_init, n_agents, lvalold)
+    def eval_grad_f(X):
+        return EV_GRAD_F_ITER(X, k_init, n_agents, Lvalold, phi_i)
         
-    def eval_g(x):
-        return EV_G_ITER(X, k_init, n_agents)
+    def eval_g(X):
+        return EV_G_ITER(X, k_init, n_agents, phi_i)
         
-    def eval_jac_g(x, flag):
-        return EV_JAC_G_ITER(X, flag, k_init, n_agents)
-        
-        # First create a handle for the Ipopt problem 
+    def eval_jac_g(X, flag):
+        return EV_JAC_G_ITER(X, flag, k_init, n_agents, phi_i)
+     
+    # First create a handle for the Ipopt problem 
     nlp=pyipopt.create(N, X_L, X_U, M, G_L, G_U, NELE_JAC, NELE_HESS, eval_f, eval_grad_f, eval_g, eval_jac_g)
     nlp.num_option("obj_scaling_factor", -1.00)
     nlp.num_option("tol", 1e-6)
@@ -94,27 +94,26 @@ def iterate(k_init, n_agents, lvalold, phi_i):
     nlp.int_option("print_level", 0)
 
     x, z_l, z_u, constraint_multipliers, obj, status=nlp.solve(X)
+    #print("obj ", obj)
     nlp.close()
-        # x: Solution of the primal variables
-        # z_l, z_u: Solution of the bound multipliers
-        # constraint_multipliers: Solution of the constraint multipliers
-        # obj: Objective value
-        # status: Exit Status
+    # x: Solution of the primal variables
+    # z_l, z_u: Solution of the bound multipliers
+    # constraint_multipliers: Solution of the constraint multipliers
+    # obj: Objective value
+    # status: Exit Status
 
-        # Unpack Consumption, Labor, and Investment 
+    # Unpack Consumption, Labor, and Investment
     c=x[:n_agents]
     l=x[n_agents:2*n_agents]
     inv=x[2*n_agents:3*n_agents]
+    to_print=np.hstack((obj,x))
 
-        #to_print=np.hstack((obj,x))
+    # === debug
+    #f=open("results.txt", 'a')
+    #np.savetxt(f, np.transpose(to_print) #, fmt=len(x)*'%10.10f ')
+    #for num in to_print:
+    #    f.write(str(num)+"\t")
+    #f.write("\n")
+    #f.close()
 
-        # == debug ==
-        #f=open("results.txt", 'a')
-        #np.savetxt(f, np.transpose(to_print) #, fmt=len(x)*'%10.10f ')
-        #for num in to_print:
-        #    f.write(str(num)+"\t")
-        #f.write("\n")
-        #f.close()
-        #print(obj)
-    
     return obj, c, l, inv
