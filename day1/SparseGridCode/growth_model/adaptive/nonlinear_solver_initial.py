@@ -121,6 +121,5 @@ def initial(k_init, n_agents):
     #    f.write(str(num)+"\t")
     #f.write("\n")
     #f.close()
-    #print(obj)
-    return obj, c, l, inv
     
+    return obj, c, l, inv

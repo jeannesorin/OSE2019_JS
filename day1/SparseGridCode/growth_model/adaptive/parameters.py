@@ -13,17 +13,16 @@ import numpy as np
 
 #====================================================================== 
 
-fTol = 1E-5
-
-refinement_level = 3
 # Depth of "Classical" Sparse grid
 iDepth=1
 iOut=1         # how many outputs
 which_basis = 1 #linear basis function (2: quadratic local basis)
+fTol = 1.E-5   # Tolerance for refinement
+refinement_level = 3
 
 # control of iterations
 numstart = 0   # which is iteration to start (numstart = 0: start from scratch, number=/0: restart)
-numits = 10    # which is the iteration to end
+numits = 20   # which is the iteration to end
 
 # How many random points for computing the errors
 No_samples = 1000
@@ -42,6 +41,7 @@ gamma=2.0
 delta=0.025
 eta=1
 big_A=(1.0-beta)/(psi*beta)
+pi = 0.2
 # Ranges For States
 range_cube=1 # range of [0..1]^d in 1D
 k_bar=0.2
@@ -58,7 +58,3 @@ inv_bar=1e-2
 inv_up=10000.0
 
 #====================================================================== 
-
-
-
-
