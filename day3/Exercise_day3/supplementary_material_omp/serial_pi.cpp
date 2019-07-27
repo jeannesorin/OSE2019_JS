@@ -1,18 +1,20 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
- 
-void main()
+#include <cstdlib>
+#include <cmath>
+#include <omp.h>
+#include <iostream>
+int main()
 {
-    double niter = 10000000;
+    int niter = 10000000;
     double x,y;
-    int i;
-    int count=0;
+    //int i = 0;
+    int count=0.;
     double z;
     double pi;
     //srand(time(NULL));
     //main loop
-    for (i=0; i<niter; ++i)
+    #pragma omp parallel for reduction(+:count)
+    for(int ii=0; ii<niter; ii++)
     {
         //get random points
         x = (double)random()/RAND_MAX;
@@ -25,4 +27,10 @@ void main()
         }
     }
     pi = ((double)count/(double)niter)*4.0;          //p = 4(m/n)
-    //printf("Pi: %f\n", pi);
+    printf("Pi: %f\n", pi);
+
+    return 0;
+}
+
+
+

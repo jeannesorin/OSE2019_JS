@@ -11,8 +11,13 @@ int main (int argc, char *argv[])
     MPI_Init(&argc, &argv);
 
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+    
+    my_rank = my_rank+1;
 
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    //MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    
+    MPI_Reduce(&my_rank, &sum, 1, MPI_INT, MPI_SUM, 2, MPI_COMM_WORLD);
 
     /* Compute sum of all ranks. */
 
