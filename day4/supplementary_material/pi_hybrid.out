@@ -1,0 +1,10 @@
+My rank is 1 and Trank is 4
+Trank is 4
+Loop size: 125000000
+I am using 1 OMP threads in cluster (rank) 4 and the value is 125000000
+I am using 2 OMP threads in cluster (rank) 4 and the value is 125000000
+I am using 3 OMP threads in cluster (rank) 4 and the value is 125000000
+w is 2.000000e-09
+I am using 0 OMP threads in cluster (rank) 4 and the value is 125000000
+Have reduced500000000 steps approximates pi as : 9.88131e-324, with relative error 1
+the solution took 0.775026 seconds
